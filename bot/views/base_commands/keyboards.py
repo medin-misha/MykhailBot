@@ -6,7 +6,7 @@ class ReplyKeyboards:
     @staticmethod
     def kb_start() -> ReplyKeyboardMarkup:
         line1: list[KeyboardButton] = [KeyboardButton(text=text) for text in ["/table", "/social"]]
-        return ReplyKeyboardMarkup(keyboard=[line1])
+        return ReplyKeyboardMarkup(keyboard=[line1], resize_keyboard=True)
 
     @staticmethod
     def kb_social() -> InlineKeyboardMarkup:

@@ -14,4 +14,4 @@ async def start_handler(msg: Message):
 
 @router.message(Command("social"))
 async def social_handler(msg: Message):
-    await msg.reply(text=Messages.social, reply_markup=ReplyKeyboards.kb_social())
+    await msg.answer(text=Messages.social, reply_markup=ReplyKeyboards.kb_social())
