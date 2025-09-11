@@ -31,3 +31,18 @@
 ```.env
 TOKEN = "Токен из BotFather"
 ```
+Это единственная обязательная переменная окружения. Все остольные так же можно выставить, но не обязательно:
+- START_MESSAGE Стартовое сообщение
+- SOCIAL_MESSAGE Сообщения с ссылками на сотсети
+  - YOUTUBE_LINK
+  - TELEGRAM_LINK
+  - INSTAGRAM_LINK
+  - TIKTOK_LINK
+  - VK_LINK
+  - ZEN_LINK
+Запуск Производиться командами:
+```commandline
+docker build -t <ContainerName> .
+docker run <ContainerName>
+```
+Естественно докер должен быть установлен и включен.
