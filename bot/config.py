@@ -21,6 +21,6 @@ class Messages:
         "Telegram": os.getenv("TELEGRAM_LINK", "https://t.me/medinmisha"),
         "Instagram": os.getenv("INSTAGRAM_LINK", "https://www.instagram.com/it_was_i_misha/"),
         "TikTok": os.getenv("TIKTOK_LINK", "https://www.tiktok.com/@iteasimisha"),
-        "VK": os.getenv("VK_LINK", "https://vk.com/id766354665"),
+        "VK": os.getenv("VK_LINK", "https://vk.com/it_was_i_misha"),
         "Дзен": os.getenv("ZEN_LINK", "https://dzen.ru/it_was_i_misha")
     }
