@@ -5,11 +5,12 @@ import asyncio
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
+from aiogram.fsm.storage.memory import MemoryStorage
 
 from config import BotSettings
 from views import router
 
-dp = Dispatcher()
+dp = Dispatcher(storage=MemoryStorage())
 bot = Bot(
     token=BotSettings.token, default=DefaultBotProperties(parse_mode=ParseMode.HTML)
 )
