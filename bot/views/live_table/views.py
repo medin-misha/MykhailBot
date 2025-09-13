@@ -1,26 +1,28 @@
-from aiogram import Router
+from aiogram import Router, F
 from aiogram.filters import Command
 from aiogram.types import Message, BufferedInputFile
+from aiogram.fsm.context import FSMContext
 from utils.print_live_table import LiveTableDraw
-
-from .keyboard import build_info_kb
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-
+from config import Messages
+from .states import GetUserBirthDateForTable
+from .utils import create_table, send_table_or_error
 router = Router()
 
 @router.message(Command("table"))
-async def create_table(msg: Message):
-    table = LiveTableDraw(name="misha", birthday_date="03/09/2008")
-    image = table.create_table()
+async def get_date_for_table(msg: Message, state: FSMContext):
+    await msg.answer(text=Messages.table_get_birthday)
+    await state.set_state(GetUserBirthDateForTable.get_date)
 
 
-    # await msg.answer(text="text", reply_markup=build_info_kb())
-    #
 
-    await msg.bot.send_document(
-        chat_id=msg.chat.id,
-        document=BufferedInputFile(
-            file=image.getvalue(),
-            filename="table.png"
-        )
-    )
+@router.message(GetUserBirthDateForTable.get_date, F.text)
+async def create_table_by_date(msg: Message, state: FSMContext):
+    table_data: dict = create_table(date=msg.text, username=msg.from_user.username)
+    await send_table_or_error(table_data=table_data, msg=msg)
+    await state.clear()
+
+@router.message(GetUserBirthDateForTable.get_date)
+async def create_by_date_message_error(msg: Message, state: FSMContext):
+    """Хендлер сработает если пользователь скинет не текстовые данные."""
+    await msg.reply(text=Messages.table_get_birthday_type_error)
+    await state.set_state(GetUserBirthDateForTable.get_date)
