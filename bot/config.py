@@ -13,7 +13,7 @@ class BotSettings:
 
 class Messages:
     start: str = os.getenv("START_MESSAGE", "Привет, я бот который создаст твою <b>личную</b> таблицу жизни! Напиши мне /table что бы начать процесс создания.")
-    social: str = os.getenv("SOCIAL_MESSAGE", "К стати, я тут подумал что хорошо, бы выложить ссылочки на мои социальные сети &lt;3")
+    social: str = os.getenv("SOCIAL_MESSAGE", "Подписывайся на меня везде! &lt;3")
     table_get_birthday: str = os.getenv("TABLE_GET_BIRTHDAY", "Скинь мне свою дату рождения в формате день/месяц/год.")
     table_get_birthday_type_error: str = os.getenv("TABLE_GET_BIRTHDAY_TYPE_ERROR", "Ты скинул какую-то херню, мне нужна дата в формате день/месяц/год типа 03/09/2006")
     media_links: dict = {
