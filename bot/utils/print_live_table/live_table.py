@@ -3,6 +3,7 @@ import numpy as np
 from datetime import datetime, timedelta
 import io
 
+
 class LiveTableComputer:
     @staticmethod
     def calculate(user_birthday: str):

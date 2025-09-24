@@ -7,6 +7,7 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
 
+from views.amqp_broker import broker
 from config import BotSettings
 from views import router
 
@@ -18,9 +19,9 @@ bot = Bot(
 
 async def main() -> None:
     logging.info("Bot started")
+    await broker.connect()
     dp.include_router(router)
     await dp.start_polling(bot)
-
 
 
 if __name__ == "__main__":
