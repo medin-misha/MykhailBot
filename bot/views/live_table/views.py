@@ -5,7 +5,7 @@ from aiogram.fsm.context import FSMContext
 from utils.print_live_table import LiveTableDraw
 from config import Messages
 from .states import GetUserBirthDateForTable
-from .utils import create_table, send_table_or_error
+from .utils import create_table, send_table_or_error, get_user_by_chat_id, reformat_user_date
 
 router = Router()
 
@@ -32,4 +32,10 @@ async def create_by_date_message_error(msg: Message, state: FSMContext):
 
 @router.message(Command("tableupdate"))
 async def update_user_table(msg: Message, state: FSMContext):
-    await msg.r
+    user: dict = await get_user_by_chat_id(chat_id=msg.chat.id)
+    if user.get("birthday_date"):
+        date: str = reformat_user_date(date=user["birthday_date"])
+        table_data: dict = create_table(username=msg.from_user.username, date=date)
+        await send_table_or_error(table_data=table_data, msg=msg)
+    else:
+        await msg.reply(text="Функция недоступна")

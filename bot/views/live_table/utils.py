@@ -7,7 +7,7 @@ from typing import Optional, Dict
 import io
 import json
 
-from config import QueueSettings
+from config import QueueSettings, AppViewsPaths, BotSettings
 from ..amqp_broker import broker
 from utils.print_live_table import LiveTableDraw
 
@@ -40,7 +40,7 @@ def create_table(date: str, username: str) -> Dict[str, io.BytesIO | None | str 
 
 
 async def send_table_or_error(
-    table_data: Dict[str, io.BytesIO | None | str | list], msg: Message, state: FSMContext
+    table_data: Dict[str, io.BytesIO | None | str | list], msg: Message, state: FSMContext | None = None
 ) -> None:
     """Функция которая скидывает таблицу в чат пользователю или
     оправляет ему сообщение об ошибке формата введённой им даты"""
@@ -57,7 +57,23 @@ async def send_table_or_error(
         ),
     )
     await save_user_birthday_by_chat_id(chat_id=msg.chat.id, birthday=table_data["date"])
-    await state.clear()
+    if state is not None:
+        await state.clear()
     return None
 
 
+async def get_user_by_chat_id(chat_id: int) -> Dict[str, int | str | None]:
+    url: str = BotSettings.app_url + AppViewsPaths.get_user_by_chat_id.format(chat_id=chat_id)
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url=url) as response:
+            result_bytes: bytes = await response.read()
+            if response.status != 200:
+                return {}
+            return json.loads(result_bytes)
+
+
+def reformat_user_date(date: str) -> str:
+    # Преобразуем строку в объект даты
+    date_obj = datetime.strptime(date, "%Y-%m-%d")
+    # Форматируем в нужный вид
+    return date_obj.strftime("%d/%m/%Y")
