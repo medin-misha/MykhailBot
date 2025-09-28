@@ -19,8 +19,8 @@ async def get_date_for_table(msg: Message, state: FSMContext):
 @router.message(GetUserBirthDateForTable.get_date, F.text)
 async def create_table_by_date(msg: Message, state: FSMContext):
     table_data: dict = create_table(date=msg.text, username=msg.from_user.username)
-    await send_table_or_error(table_data=table_data, msg=msg)
-    await state.clear()
+    await send_table_or_error(table_data=table_data, msg=msg, state=state)
+
 
 
 @router.message(GetUserBirthDateForTable.get_date)
@@ -28,3 +28,8 @@ async def create_by_date_message_error(msg: Message, state: FSMContext):
     """Хендлер сработает если пользователь скинет не текстовые данные."""
     await msg.reply(text=Messages.table_get_birthday_type_error)
     await state.set_state(GetUserBirthDateForTable.get_date)
+
+
+@router.message(Command("tableupdate"))
+async def update_user_table(msg: Message, state: FSMContext):
+    await msg.r

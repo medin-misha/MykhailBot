@@ -1,4 +1,6 @@
+from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, BufferedInputFile
+import aiohttp
 
 from datetime import datetime
 from typing import Optional, Dict
@@ -30,7 +32,7 @@ def create_table(date: str, username: str) -> Dict[str, io.BytesIO | None | str 
 
 
 async def send_table_or_error(
-    table_data: Dict[str, io.BytesIO | None | str | list], msg: Message
+    table_data: Dict[str, io.BytesIO | None | str | list], msg: Message, state: FSMContext
 ) -> None:
     """Функция которая скидывает таблицу в чат пользователю или
     оправляет ему сообщение об ошибке формата введённой им даты"""
@@ -47,4 +49,7 @@ async def send_table_or_error(
             file=table_data["table"].getvalue(), filename="table.png"
         ),
     )
+    await state.clear()
     return None
+
+
