@@ -5,8 +5,16 @@ import aiohttp
 from datetime import datetime
 from typing import Optional, Dict
 import io
+import json
 
+from config import QueueSettings
+from ..amqp_broker import broker
 from utils.print_live_table import LiveTableDraw
+
+async def save_user_birthday_by_chat_id(chat_id: int, birthday: str) -> None:
+    dict_data = {"chat_id": chat_id, "birthday": birthday}
+    string: str = json.dumps(dict_data)
+    await broker.publish(message=string, queue=QueueSettings.birthday_queue)
 
 
 def validate_date_format(date: str, format: str = "%d/%m/%Y") -> Optional[str]:
@@ -28,7 +36,7 @@ def create_table(date: str, username: str) -> Dict[str, io.BytesIO | None | str 
         return {"table": None, "is_created": False, "errors": errors}
     table = LiveTableDraw(name=username, birthday_date=date)
     table_image = table.create_table()
-    return {"table": table_image, "is_created": True, "errors": errors}
+    return {"table": table_image, "is_created": True, "errors": errors, "date": date}
 
 
 async def send_table_or_error(
@@ -37,7 +45,6 @@ async def send_table_or_error(
     """Функция которая скидывает таблицу в чат пользователю или
     оправляет ему сообщение об ошибке формата введённой им даты"""
     if table_data.get("errors"):
-        print(table_data)
         await msg.answer(
             "Ты скинул что то не то, формат даты должен быть <b>03/09/2008</b>."
         )
@@ -49,6 +56,7 @@ async def send_table_or_error(
             file=table_data["table"].getvalue(), filename="table.png"
         ),
     )
+    await save_user_birthday_by_chat_id(chat_id=msg.chat.id, birthday=table_data["date"])
     await state.clear()
     return None
 
