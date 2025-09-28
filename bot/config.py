@@ -13,11 +13,16 @@ dotenv.load_dotenv(BaseSettings.base_dir / ".env")
 class BotSettings:
     token: str = os.getenv("TOKEN")
     rmq_url: str = os.getenv("RMQ_URL")
+    app_url: str = os.getenv("APP_URL")
+
+
+class AppViewsPaths:
+    get_user_by_chat_id: str = os.getenv("GET_USER_BY_CHAT_ID", "/users/{chat_id}")
 
 
 class QueueSettings:
     auth_queue: str = os.getenv("AUTH_QUEUE", "auth_user")
-
+    birthday_queue: str = os.getenv("BIRTHDAY_QUEUE", "user_birthday")
 
 class Messages:
     start: str = os.getenv(
